@@ -30,8 +30,10 @@ window.addEventListener("DOMContentLoaded",
     }, false
 );
 
+let soundEndflag = "0";//sound control
 //おみくじボタン
 const btn1 = document.getElementById("btn1");
+const omikujiText = document.getElementById("omikujiText");
 btn1.addEventListener("click",
     function () {
         /*  let n = Math.floor(Math.random() * 3);
@@ -53,10 +55,15 @@ btn1.addEventListener("click",
                   btn1.style.fontSize = "30px";
                   break;
           }*/
+        //sound control
+        if (soundEndflag === "1") {
+            soundControl("end", "");
+        }
+
         btn1.style.transition = "1s";//fukada-add
         let resultText = ["大吉!!!!!", "吉!!!!", "中吉!!!", "小吉!!", "末吉!", "凶。。"];
         let resultColor = ["#ff0000", "#c71585", "#ff1493", "#ff69b4", "#ff8c00", "#1e90ff"];
-        let resultFontSize = ["55px", "50px", "45px", "40px", "35px", "30px"];
+        let resultFontSize = ["90px", "80px", "70px", "60px", "50px", "40px"];
         let resultMaxSpeed = [10, 10, 8, 5, 5, 5];
         let resultMaxSize = [30, 30, 20, 15, 20, 20];
         let resultImage = [
@@ -67,10 +74,23 @@ btn1.addEventListener("click",
             "img/leaf.png",
             "img/snowflakes.png"
         ];
+        let resultSound = [
+            "sound/omikuji_sound1.mp3",
+            "sound/omikuji_sound2.mp3",
+            "sound/omikuji_sound2.mp3",
+            "sound/omikuji_sound2.mp3",
+            "sound/omikuji_sound2.mp3",
+            "sound/omikuji_sound3.mp3",
+        ];
         let n = Math.floor(Math.random() * resultText.length);
-        btn1.textContent = resultText[n];
-        btn1.style.color = resultColor[n];
-        btn1.style.fontSize = resultFontSize[n];
+        omikujiText.textContent = resultText[n];
+        omikujiText.style.color = resultColor[n];
+        omikujiText.style.fontSize = resultFontSize[n];
+
+        //sound control
+        w_sound = resultSound[n];
+        soundControl("start", w_sound);//サウンド
+        soundEndflag = "1";
 
         // snowfall stop
         $(document).snowfall("clear");
@@ -87,4 +107,19 @@ btn1.addEventListener("click",
 
     }, false
 );
+
+//sound control
+let w_sound
+let music
+function soundControl(status, w_sound) {
+    if (status === "start") {
+        music = new Audio(w_sound);
+        music.currentTime = 0;
+        music.play();
+    }
+    else if (status === "end") {
+        music.pause();
+        music.currentTime = 0;
+    }
+}
 
